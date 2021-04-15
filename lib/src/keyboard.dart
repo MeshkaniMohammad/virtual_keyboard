@@ -13,6 +13,10 @@ class VirtualKeyboard extends StatefulWidget {
 
   /// Callback for Key press event. Called with pressed `Key` object.
   final Function onKeyPress;
+  ///delete entered text
+  final Function tapOnDelete;
+
+
 
   /// Virtual keyboard height. Default is 300
   final double height;
@@ -33,6 +37,7 @@ class VirtualKeyboard extends StatefulWidget {
       {Key key,
       @required this.type,
       @required this.onKeyPress,
+      @required this.tapOnDelete,
       this.builder,
       this.height = _virtualKeyboardDefaultHeight,
       this.textColor = Colors.black,
@@ -50,6 +55,8 @@ class VirtualKeyboard extends StatefulWidget {
 class _VirtualKeyboardState extends State<VirtualKeyboard> {
   VirtualKeyboardType type;
   Function onKeyPress;
+  Function tapOnDelete;
+
   // The builder function will be called for each Key object.
   Widget Function(BuildContext context, VirtualKeyboardKey key) builder;
   double height;
@@ -68,15 +75,17 @@ class _VirtualKeyboardState extends State<VirtualKeyboard> {
     setState(() {
       type = widget.type;
       onKeyPress = widget.onKeyPress;
+      tapOnDelete = widget.tapOnDelete;
       height = widget.height;
       textColor = widget.textColor;
       fontSize = widget.fontSize;
       alwaysCaps = widget.alwaysCaps;
 
       // Init the Text Style for keys.
-      textStyle = TextStyle(
-        fontSize: fontSize,
+      textStyle = GoogleFonts.montserrat(
         color: textColor,
+        fontSize: fontSize,
+        fontWeight: FontWeight.w600,
       );
     });
   }
@@ -87,15 +96,17 @@ class _VirtualKeyboardState extends State<VirtualKeyboard> {
 
     type = widget.type;
     onKeyPress = widget.onKeyPress;
+    tapOnDelete = widget.tapOnDelete;
     height = widget.height;
     textColor = widget.textColor;
     fontSize = widget.fontSize;
     alwaysCaps = widget.alwaysCaps;
 
     // Init the Text Style for keys.
-    textStyle = TextStyle(
-      fontSize: fontSize,
+    textStyle = GoogleFonts.montserrat(
       color: textColor,
+      fontSize: fontSize,
+      fontWeight: FontWeight.w600,
     );
   }
 
@@ -233,6 +244,7 @@ class _VirtualKeyboardState extends State<VirtualKeyboard> {
                 }
               });
             },
+            onTap: tapOnDelete,
             onLongPressUp: () {
               // Cancel event loop
               longPress = false;
@@ -241,7 +253,7 @@ class _VirtualKeyboardState extends State<VirtualKeyboard> {
               height: double.infinity,
               width: double.infinity,
               child: Icon(
-                Icons.backspace,
+                Icons.arrow_back_ios_sharp,
                 color: textColor,
               ),
             ));
